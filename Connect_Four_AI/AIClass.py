@@ -10,14 +10,14 @@ class AI(Player):
 		super(AI, self).__init__(chip)
 		self.setDifficulty(difficulty)
 		self.logScores(showScores)		
-
+	#sets difficulty of ai (which is dpeth of moves calculated
 	def setDifficulty(self, difficulty):
 		self.depth = difficulty
-
+	#logging scores of ai scoring system
 	def logScores(self, showScores):
 		if showScores == 'y':
 			self.showScores = True
-
+	#how the ai plays its move
 	def playTurn(self, board):
 		move = self.alphaBetaSearch(board)
 		board.addChip(self.chip, move[0], move[1])
@@ -40,70 +40,19 @@ class AI(Player):
 		diagonal1Score = 0
 		diagonal2Score = 0
 
-		'''	// Vertical
-		    // Check each column for vertical score
-		    // 
-		    // 3 pssible situations per column
-		    //  0  1  2  3  4  5  6
-		    // [x][ ][ ][ ][ ][ ][ ] 0
-		    // [x][x][ ][ ][ ][ ][ ] 1
-		    // [x][x][x][ ][ ][ ][ ] 2
-		    // [x][x][x][ ][ ][ ][ ] 3
-		    // [ ][x][x][ ][ ][ ][ ] 4
-		    // [ ][ ][x][ ][ ][ ][ ] 5
-    	'''
-
 		for row in range(board.boardHeight - 3):
 			for column in range(board.boardWidth):
 				score = self.scorePosition(board, row, column, 1, 0)
 				verticalScore += score
-
-		'''
-			// Horizontal
-		    // Check each row's score
-		    // 
-		    // 4 possible situations per row
-		    //  0  1  2  3  4  5  6
-		    // [x][x][x][x][ ][ ][ ] 0
-		    // [ ][x][x][x][x][ ][ ] 1
-		    // [ ][ ][x][x][x][x][ ] 2
-		    // [ ][ ][ ][x][x][x][x] 3
-		    // [ ][ ][ ][ ][ ][ ][ ] 4
-		    // [ ][ ][ ][ ][ ][ ][ ] 5
-    	'''
 		for row in range(board.boardHeight):
 			for column in range(board.boardWidth - 3):
 				score = self.scorePosition(board, row, column, 0, 1)
 				horizontalScore += score
-
-		'''	// Diagonal points 1 (negative-slope)
-		    //
-		    // 
-		    //  0  1  2  3  4  5  6
-		    // [x][ ][ ][ ][ ][ ][ ] 0
-		    // [ ][x][ ][ ][ ][ ][ ] 1
-		    // [ ][ ][x][ ][ ][ ][ ] 2
-		    // [ ][ ][ ][x][ ][ ][ ] 3
-		    // [ ][ ][ ][ ][ ][ ][ ] 4
-		    // [ ][ ][ ][ ][ ][ ][ ] 5
-    	'''
 		for row in range(board.boardHeight-3):
 			for column in range(board.boardWidth - 3):
 				score = self.scorePosition(board, row, column, 1, 1)
 				diagonal1Score += score
 
-		'''
-		    // Diagonal points 2 (positive slope)
-		    //
-		    // 
-		    //  0  1  2  3  4  5  6
-		    // [ ][ ][ ][x][ ][ ][ ] 0
-		    // [ ][ ][x][ ][ ][ ][ ] 1
-		    // [ ][x][ ][ ][ ][ ][ ] 2
-		    // [x][ ][ ][ ][ ][ ][ ] 3
-		    // [ ][ ][ ][ ][ ][ ][ ] 4
-		    // [ ][ ][ ][ ][ ][ ][ ] 5
-		'''
 		for row in range(3, board.boardHeight):
 			for column in range(board.boardWidth - 3):
 				score = self.scorePosition(board, row, column, -1, 1)
@@ -112,12 +61,6 @@ class AI(Player):
 		return horizontalScore + verticalScore + diagonal1Score + diagonal2Score
 	
 	def scorePosition(self, board, row, column, deltaROW, deltaCOL):
-		'''
-			Hueristic evaluation for current state
-			+1000, +100, +10, +1 for 4-,3-,2-,1-in-a-line for AI player
-			-1000, -100, -10, -1 for 4-,3-,2-,1-in-a-line for human player
-			0 otherwise
-		'''
 		humanScore = 0
 		AIScore = 0
 		humanPoints = 0
